@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_EMPLOYEES 50
+
+struct Employee {
+    char name[50];
+    int id;
+    float salary;
+    char job_title[50];
+};
+
+void add_employee(struct Employee employees[], int *num_employees);
+void remove_employee(struct Employee employees[], int *num_employees);
+void print_employees(struct Employee employees[], int num_employees);
+void print_employee(struct Employee employee);
+
+int main() {
+    struct Employee employees[MAX_EMPLOYEES];
+    int num_employees = 0;
+    int choice;
+
+    do {
+        printf("1. Add employee\n");
+        printf("2. Remove employee\n");
+        printf("3. Print all employees\n");
+        printf("4. Quit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                add_employee(employees, &num_employees);
+                break;
+            case 2:
+                remove_employee(employees, &num_employees);
+                break;
+            case 3:
+                print_employees(employees, num_employees);
+                break;
+            case 4:
+                printf("Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice. Try again.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+void add_employee(struct Employee employees[], int *num_employees) {
+    if (*num_employees >= MAX_EMPLOYEES) {
+        printf("Maximum number of employees reached.\n");
+        return;
+    }
+
+    struct Employee new_employee;
+    printf("Enter name: ");
+    scanf("%s", new_employee.name);
+    printf("Enter ID: ");
+    scanf("%d", &new_employee.id);
+    printf("Enter salary: ");
+    scanf("%f", &new_employee.salary);
+    printf("Enter job title: ");
+    scanf("%s", new_employee.job_title);
+
+    employees[*num_employees] = new_employee;
+    *num_employees += 1;
+}
+
+void remove_employee(struct Employee employees[], int *num_employees) {
+    int id_to_remove;
+    printf("Enter ID of employee to remove: ");
+    scanf("%d", &id_to_remove);
+
+    int i;
+    for (i = 0; i < *num_employees; i++) {
+        if (employees[i].id == id_to_remove) {
+            int j;
+            for (j = i; j < *num_employees - 1; j++) {
+                employees[j] = employees[j + 1];
+            }
+            *num_employees -= 1;
+            printf("Employee with ID %d removed.\n", id_to_remove);
+            return;
+        }
+    }
+
+    printf("Employee with ID %d not found.\n", id_to_remove);
+}
+
+void print_employees(struct Employee employees[], int num_employees) {
+    if (num_employees == 0) {
+        printf("No employees to print.\n");
+        return;
+    }
+
+    int i;
+    for (i = 0; i < num_employees; i++) {
+        print_employee(employees[i]);
+    }
+}
+
+void print_employee(struct Employee employee) {
+    printf("Name: %s\n", employee.name);
+    printf("ID: %d\n", employee.id);
+    printf("Salary: %.2f\n", employee.salary);
+    printf("Job title: %s\n", employee.job_title);
+    printf("\n");
+}
